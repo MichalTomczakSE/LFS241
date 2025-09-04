@@ -22,7 +22,7 @@ show_container_id() {
 	echo "$1 is already running with id $(docker ps -aq -f name=$1)"
 }
 
-if ! docker network inspect $LAB_NETWORK > /dev/null ; then 
+if [ ! docker network inspect $LAB_NETWORK > /dev/null ]; then 
 	echo "Creating network $LAB_NETWORK"
 	docker network create --driver bridge $LAB_NETWORK
 fi
