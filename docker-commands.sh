@@ -47,7 +47,7 @@ docker ps -a -f name=$PROM_NAME | grep -q $PROM_NAME && {
 	show_container_id $PROM_NAME
 } || {
 	echo "Creating $PROM_NAME container" 
-	docker run -d -p $PROM_PORT --name $PROM_NAME -h $PROM_NAME --net $LAB_NETWORK -v $PROMETHEUS_VOLUME  $PROMETHEUS_IMAGE:$PROM_VERSION
+	docker run -d -p $PROM_PORT --name $PROM_NAME -h $PROM_NAME --net $LAB_NETWORK -v $PROM_VOLUME  $PROM_IMAGE:$PROM_VERSION
 }
 
 docker ps -a -f name=$GRAFANA_NAME | grep -q $GRAFANA_NAME && { 
