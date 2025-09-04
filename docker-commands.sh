@@ -20,6 +20,7 @@ NODE_EXPORTER_IMAGE="docker.io/prom/node-exporter"
 
 CADVISOR_NAME="cadvisor"
 CADVISOR_IMAGE="gcr.io/cadvisor/cadvisor"
+CADVISOR_VOLUME="-v /:/rootfs:ro -v /var/run:/var/run:ro -v /sys:/sys:ro -v /var/lib/docker:/var/lib/docker:ro -v /dev/disk/:/dev/disk:ro"
 CADVISOR_VERSION="v0.52.1"
 
 
@@ -29,7 +30,7 @@ run_container() {
 	local image_tag=$3
 	local extra_args=$4
 	local image_args=$5
-
+ 
 	if docker ps -a --format '{{.Names}}' | grep -q "^${name}$" ; then 
 		echo "Container $name is already running with id $(docker ps -aq -f name=$1)"
 	else 
@@ -60,3 +61,4 @@ done;
 run_container "${PROM_NAME}" "${LAB_NETWORK}" "${PROM_IMAGE}:${PROM_VERSION}" "-v ${PROM_VOLUME} -p ${PROM_PORT}"
 run_container "${GRAFANA_NAME}" "${LAB_NETWORK}" "${GRAFANA_IMAGE}:${GRAFANA_VERSION}" "-p ${GRAFANA_PORT}" 
 run_container "${NODE_EXPORTER_NAME}" "${HOST_NETWORK}" "${NODE_EXPORTER_IMAGE}:${NODE_EXPORTER_VERSION}" "--pid ${HOST_NETWORK} -v ${NODE_EXPORTER_VOLUME}" --path.rootfs=/host
+run_container "${CADVISOR_NAME}" "${LAB_NETWORK}" "${CADVISOR_VOLUME}" "${CADVISOR_IMAGE}:${CADVISOR_VERSION}" 
