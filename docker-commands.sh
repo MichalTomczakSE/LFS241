@@ -18,6 +18,11 @@ NODE_EXPORTER_VERSION="v1.9.1"
 NODE_EXPORTER_VOLUME="/:/host:ro,rslave"
 NODE_EXPORTER_IMAGE="docker.io/prom/node-exporter"
 
+CADVISOR_NAME="cadvisor"
+CADVISOR_IMAGE="gcr.io/cadvisor/cadvisor"
+CADVISOR_VERSION="v0.52.1"
+
+
 run_container() {
 	local name=$1
 	local network=$2
