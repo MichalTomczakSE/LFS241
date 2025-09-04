@@ -45,13 +45,12 @@ fi
 
 if  ! docker images --format '{{.Repository}}' | grep -q "prometheus-demo-service"; then 
 	echo "Building prometheus-demo-service" 
-	docker build -t prometheus-demo-service LFS241/demo-service-source/.
-else 
-	echo "Docker image exists, running demo service containers" 
-	for i in {1..3}; do
-		run_container d${i} $LAB_NETWORK prometheus-demo-service 
-	done;
+	docker build -t prometheus-demo-service LFS241/demo-service-source/. 
 fi
+
+for i in {1..3}; do
+	run_container d${i} $LAB_NETWORK prometheus-demo-service 
+done;
 
 run_container "${PROM_NAME}" "${LAB_NETWORK}" "${PROM_IMAGE}:${PROM_VERSION}" "-v ${PROM_VOLUME} -p ${PROM_PORT}"
 run_container "${GRAFANA_NAME}" "${LAB_NETWORK}" "${GRAFANA_IMAGE}:${GRAFANA_VERSION}" "-p ${GRAFANA_PORT}" 
