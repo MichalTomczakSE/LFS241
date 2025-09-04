@@ -47,7 +47,7 @@ docker ps -a -f name=$GRAFANA_NAME | grep -q $GRAFANA_NAME && {
 	docker run -d -p $GRAFANA_PORT --name $GRAFANA_NAME -h $GRAFANA_NAME --net $LAB_NETWORK grafana/grafana:$GRAFANA_VERSION
 }
 
-docker ps -a -f name=$DOCKER_EXPORTER_NAME | grep -q $NODE_EXPORTER_NAME && { 
+docker ps -a -f name=$NODE_EXPORTER_NAME | grep -q $NODE_EXPORTER_NAME && { 
 	echo "$NODE_EXPORTER_NAME is already running with id $(docker ps -aq -f name=$NODE_EXPORTER_NAME)"
 } || {
 	echo "Creating $NODE_EXPORTER_NAME container" 
