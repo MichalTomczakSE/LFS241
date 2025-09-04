@@ -25,7 +25,7 @@ run_container() {
 	local extra_args=$4
 	local image_args=$5
 
-	if docker ps -a --format '{{.Names}}' | grep -q "${name}" ; then 
+	if docker ps -a --format '{{.Names}}' | grep -q "^${name}$" ; then 
 		echo "Container $name is already running with id $(docker ps -aq -f name=$1)"
 	else 
 		echo "Creating container: ${name}"
