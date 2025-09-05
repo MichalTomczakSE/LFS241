@@ -23,7 +23,6 @@ CADVISOR_IMAGE="gcr.io/cadvisor/cadvisor"
 CADVISOR_VOLUME="-v /:/rootfs:ro -v /var/run:/var/run:ro -v /sys:/sys:ro -v /var/lib/docker:/var/lib/docker:ro -v /dev/disk/:/dev/disk:ro"
 CADVISOR_VERSION="v0.52.1"
 
-
 run_container() {
 	local name=$1
 	local network=$2
@@ -49,7 +48,7 @@ if [ ! -d LFS241 ]; then
 	git clone --depth=1 https://github.com/lftraining/LFS241.git
 fi
 
-if  ! docker images --format '{{.Repository}}' | grep -q "prometheus-demo-service"; then 
+if  ! docker images --format '{{.Repository}}' | grep -q "^prometheus-demo-service$"; then 
 	echo "Building prometheus-demo-service" 
 	docker build -t prometheus-demo-service LFS241/demo-service-source/. 
 fi
@@ -63,3 +62,8 @@ run_container "${GRAFANA_NAME}" "${LAB_NETWORK}" "${GRAFANA_IMAGE}:${GRAFANA_VER
 run_container "${NODE_EXPORTER_NAME}" "${HOST_NETWORK}" "${NODE_EXPORTER_IMAGE}:${NODE_EXPORTER_VERSION}" "--pid ${HOST_NETWORK} -v ${NODE_EXPORTER_VOLUME}" --path.rootfs=/host
 run_container "${CADVISOR_NAME}" "${LAB_NETWORK}" "${CADVISOR_IMAGE}:${CADVISOR_VERSION}" "${CADVISOR_VOLUME}"
 
+if ! docker images --format '{{.Repository}}' | grep -q "^cpu-exporter$"; then
+	docker build -t cpu-exporter ./cpu-exporter/.
+fi
+
+run_container "cpu-exporter" "${LAB_NETWORK}" "cpu-exporter" "-e LC_ALL=C" 
