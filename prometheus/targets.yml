@@ -1,0 +1,10 @@
+- targets:
+    - 'd1:8080'
+    - 'd2:8080'
+  labels:
+    env: production
+- targets:
+    - 'd3:8080'
+  labels:
+    env: staging
+
