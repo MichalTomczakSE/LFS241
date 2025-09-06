@@ -23,6 +23,12 @@ CADVISOR_IMAGE="gcr.io/cadvisor/cadvisor"
 CADVISOR_VOLUME="-v /:/rootfs:ro -v /var/run:/var/run:ro -v /sys:/sys:ro -v /var/lib/docker:/var/lib/docker:ro -v /dev/disk/:/dev/disk:ro"
 CADVISOR_VERSION="v0.52.1"
 
+CONSUL_NAME="consul"
+CONSUL_IMAGE="docker.io/hashicorp/consul"
+CONSUL_VERSION="1.20"
+CONSUL_VOLUME="./prometheus/demo-service.json:/etc/consul/demo-service.json" 
+
+
 run_container() {
 	local name=$1
 	local network=$2
@@ -67,3 +73,4 @@ if ! docker images --format '{{.Repository}}' | grep -q "^cpu-exporter$"; then
 fi
 
 run_container "cpu-exporter" "${LAB_NETWORK}" "cpu-exporter" "-e LC_ALL=C" 
+run_container "${CONSUL_NAME}" "${LAB_NETWORK}" "${CONSUL_IMAGE}:${CONSUL_VERSION}" "-v ${CONSUL_VOLUME}" "agent -bind=0.0.0.0 -client=0.0.0.0 -dev -config-file=/etc/consul/demo-service.json" 
