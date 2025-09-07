@@ -28,6 +28,11 @@ CONSUL_IMAGE="docker.io/hashicorp/consul"
 CONSUL_VERSION="1.20"
 CONSUL_VOLUME="./prometheus/demo-service.json:/etc/consul/demo-service.json" 
 
+BLACKBOX_NAME="blackbox-exporter"
+BLACKBOX_PORT="9115:9115"
+BLACKBOX_VOLUME="./prometheus/blackbox.yml:/config/blackbox.yml"
+BLACKBOX_IMAGE="docker.io/prom/blackbox-exporter"
+BLACKBOX_VERSION="v0.26.0"
 
 run_container() {
 	local name=$1
@@ -74,3 +79,4 @@ fi
 
 run_container "cpu-exporter" "${LAB_NETWORK}" "cpu-exporter" "-e LC_ALL=C" 
 run_container "${CONSUL_NAME}" "${LAB_NETWORK}" "${CONSUL_IMAGE}:${CONSUL_VERSION}" "-v ${CONSUL_VOLUME}" "agent -bind=0.0.0.0 -client=0.0.0.0 -dev -config-file=/etc/consul/demo-service.json" 
+run_container "${BLACKBOX_NAME}" "${LAB_NETWORK}" "${BLACKBOX_IMAGE}:${BLACKBOX_VERSION}" "-v ${BLACKBOX_VOLUME} -p ${BLACKBOX_PORT}" "--config.file=/config/blackbox.yml"
